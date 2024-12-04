@@ -10,10 +10,11 @@ Bulletin board group programming project for CS4065 Computer Networks.
 
 Both the client and server are built using Python 3.10.
 Required packages: `socket threading signal sys pickle os datetime copy`
+Note: Required packages should be included in the venv located within this repo.
 
-To start the server, execute `python server.py`. You will be asked for the host IP and the port which the server will be run on. Following this, the groups and boards will be loaded and the server will listen for connections.
+To start the server, run `server_startup.bat`. You will be asked for the host IP and the port which the server will be run on. Following this, the groups and boards will be loaded and the server will listen for connections.
 
-To start a new client, execute `python client.py`. You will be asked for a username as well as the group you wish to be part of. Following this, you will be able to execute commands as that user with reference to the specific group you are part of.
+To start a new client, run `client_startup.bat`. You will be asked for a username as well as the group you wish to be part of. Following this, you will be able to execute commands as that user with reference to the specific group you are part of.
 
 Instructions on how certain commands work can be found within the program by running `%help` in the client terminal.
 
