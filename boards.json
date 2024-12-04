@@ -1,3 +1,98 @@
 {
-    "default": {}
+    "default": {
+        "0": {
+            "sender": "Testing-Chatroom",
+            "date": "2024-12-03",
+            "subject": "GeneralMessage",
+            "message": "This is an example of a general message",
+            "users_at_time_of_posting": [
+                "Tester-2",
+                "Testing3",
+                "Blank1",
+                "Ha",
+                "HEHEHEHE",
+                "This",
+                "Hello",
+                "MMMM",
+                "TTT",
+                "RRRRR",
+                "WWW",
+                "QQQ",
+                "LLLL",
+                "YYY",
+                "HHH",
+                "UUU",
+                "b",
+                "LL",
+                "H",
+                "Victory",
+                "V",
+                "Testing-Chatroom"
+            ]
+        }
+    },
+    "Tester1": {
+        "0": {
+            "sender": "Nick-North",
+            "date": "2024-12-03",
+            "subject": "TestingSubject",
+            "message": "Hello This is Testing Message 1",
+            "users_at_time_of_posting": [
+                "Nick-North"
+            ]
+        },
+        "1": {
+            "sender": "Hello",
+            "date": "2024-12-03",
+            "subject": "BBBBBBB",
+            "message": "Example Text",
+            "users_at_time_of_posting": [
+                "Nick-North",
+                "Blank1",
+                "Ha",
+                "HEHEHEHE",
+                "This",
+                "Hello"
+            ]
+        },
+        "2": {
+            "sender": "Victory",
+            "date": "2024-12-03",
+            "subject": "Failure",
+            "message": "This is to test failing",
+            "users_at_time_of_posting": [
+                "Nick-North",
+                "Blank1",
+                "Ha",
+                "HEHEHEHE",
+                "This",
+                "Hello",
+                "MMMM",
+                "TTT",
+                "RRRRR",
+                "WWW",
+                "QQQ",
+                "LLLL",
+                "YYY",
+                "HHH",
+                "UUU",
+                "b",
+                "LL",
+                "H",
+                "Victory"
+            ]
+        }
+    },
+    "0": {},
+    "MyOwnGroup": {
+        "0": {
+            "sender": "Testing-Chatroom",
+            "date": "2024-12-03",
+            "subject": "HelloThere",
+            "message": "Hello world, this is my very own group!",
+            "users_at_time_of_posting": [
+                "Testing-Chatroom"
+            ]
+        }
+    }
 }

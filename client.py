@@ -182,6 +182,7 @@ class Client:
 def main():
     # Get input from user, username and group
     username = input("Enter username: ")
+    username = username.replace(" ", "-")
     group = input("Enter group (RETURN if n/a): ")
     # Instantiate client interface
     if group == "":

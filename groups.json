@@ -1,3 +1,54 @@
 {
-    "default": []
+    "default": [
+        "Tester-2",
+        "Testing3",
+        "Blank1",
+        "Ha",
+        "HEHEHEHE",
+        "This",
+        "Hello",
+        "MMMM",
+        "TTT",
+        "RRRRR",
+        "WWW",
+        "QQQ",
+        "LLLL",
+        "YYY",
+        "HHH",
+        "UUU",
+        "b",
+        "LL",
+        "H",
+        "Victory",
+        "V",
+        "Testing-Chatroom"
+    ],
+    "Tester1": [
+        "Nick-North",
+        "Blank1",
+        "Ha",
+        "HEHEHEHE",
+        "This",
+        "Hello",
+        "MMMM",
+        "TTT",
+        "RRRRR",
+        "WWW",
+        "QQQ",
+        "LLLL",
+        "YYY",
+        "HHH",
+        "UUU",
+        "b",
+        "LL",
+        "H",
+        "Victory",
+        "V"
+    ],
+    "0": [
+        "Nick-North"
+    ],
+    "MyOwnGroup": [
+        "Testing-Chatroom"
+    ]
 }

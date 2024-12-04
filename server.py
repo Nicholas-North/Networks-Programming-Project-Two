@@ -7,6 +7,7 @@ from os.path import exists
 import datetime
 import copy
 import select
+from datetime import date
 
 # Define the max number of connections
 MAX_CONNECTIONS = 5
@@ -24,15 +25,22 @@ class Server:
         self.lock = threading.Lock()
         self.running = True
 
+
+    def default_serializer(self, obj):
+        """Helper function to convert non-serializable objects to serializable ones."""
+        if isinstance(obj, date):
+            return obj.isoformat()
+        raise TypeError(f"Object of type {obj.__class__.__name__} is not JSON serializable")
+
     def server_shutdown(self, signum, frame):
         """Shutdown server and save data for next startup."""
         print("\nCtrl+C pressed. Starting shutdown...")
         self.running = False
         # Shut down the process.
         with open("groups.json", "w") as f:
-            json.dump(self.groups, f, indent=4)
+            json.dump(self.groups, f, indent=4, default=self.default_serializer)
         with open("boards.json", "w") as f:
-            json.dump(self.boards, f, indent=4)
+            json.dump(self.boards, f, indent=4, default=self.default_serializer)
         print("Done! See you later.")
         sys.exit(0)
 
@@ -53,6 +61,8 @@ class Server:
         if exists("boards.json"):
             with open("boards.json", "r") as f:
                 self.boards = json.load(f)
+
+        self.boards = {key: {int(k): v for k, v in value.items()} for key, value in self.boards.items()}
 
         # Listen for incoming connections
         print("Listening for connections on %s:%s..." % (self.host, self.port))
@@ -259,7 +269,17 @@ class Server:
                     for cid, info in self.connected_clients.items():
                         if info["name"] is not client_name and info["name"] in self.groups[group]:
                             info["client_socket"].send(f"New member {client_name} has joined group '{group}'.".encode())
-                    return_message = f"Added to group '{group}'.\nCurrent Members: " + ", ".join(self.groups[group])
+                    
+                    if len(self.boards[group]) > 0:
+                        sorted_items = sorted(self.boards[group].keys())
+                        last_two_items = sorted_items[-2:]
+                        messages_text = "\nPrevious messages:\n"
+                        for key in last_two_items:
+                            messages_text += f"Message ID: {key} + \n"
+                    else:
+                        messages_text = "\nNo previous messages."
+                    
+                    return_message = f"Added to group '{group}'.\nCurrent Members: " + ", ".join(self.groups[group]) + messages_text
                     client_socket.send(return_message.encode())
 
     def handle_post(self, client_id, group, subject, *message):
@@ -301,8 +321,7 @@ class Server:
             if message is not None:
                 if sender_name not in self.boards[group][int(message_id)]['users_at_time_of_posting']:
                     # Check if they're in the list of members two posts from now.
-                    if (sender_name in self.boards[group][int(message_id)+1]['users_at_time_of_posting'] or
-                        sender_name in self.boards[group][int(message_id)+2]['users_at_time_of_posting']):
+                    if (sender_name in self.boards[group][int(message_id)]['users_at_time_of_posting']):
                         encodedMessage = f"{message['sender']} on {message['date']} ({message['subject']}): {message['message']}".encode()
                         client_socket.send(encodedMessage)
                     else:
@@ -312,7 +331,7 @@ class Server:
                     client_socket.send(encodedMessage)
             else:
                 raise Exception
-        except:
+        except Exception as e:
             client_socket.send("Error: Message ID does not exist.".encode())
 
     def handle_leave(self, client_id, group):
