@@ -2,10 +2,11 @@ import socket
 import threading
 import signal
 import sys
-import pickle
+import json
 from os.path import exists
 import datetime
 import copy
+import select
 
 # Define the max number of connections
 MAX_CONNECTIONS = 5
@@ -21,11 +22,17 @@ class Server:
         self.groups = {"default": []}
         self.boards = {"default": {}}
         self.lock = threading.Lock()
+        self.running = True
 
     def server_shutdown(self, signum, frame):
         """Shutdown server and save data for next startup."""
         print("\nCtrl+C pressed. Starting shutdown...")
+        self.running = False
         # Shut down the process.
+        with open("groups.json", "w") as f:
+            json.dump(self.groups, f, indent=4)
+        with open("boards.json", "w") as f:
+            json.dump(self.boards, f, indent=4)
         print("Done! See you later.")
         sys.exit(0)
 
@@ -38,17 +45,31 @@ class Server:
         # Set max amount of users to MAX_CONNECTIONS
         self.server_socket.listen(MAX_CONNECTIONS)
 
+        # Load groups and boards from previous shutdown
+        if exists("groups.json"):
+            with open("groups.json", "r") as f:
+                self.groups = json.load(f)
+        
+        if exists("boards.json"):
+            with open("boards.json", "r") as f:
+                self.boards = json.load(f)
+
         # Listen for incoming connections
         print("Listening for connections on %s:%s..." % (self.host, self.port))
         self.server_socket.listen()
-        while True:
-            # Send each client to open_connections
-            client_socket, client_address = self.server_socket.accept()
-            threading.Thread(
-                target=self.open_connection,
-                args=(client_socket, client_address),
-                daemon=True,
-            ).start()
+        while self.running:
+            try:
+                # Use select to make the loop non-blocking
+                ready_to_read, _, _ = select.select([self.server_socket], [], [], 1)
+                if ready_to_read:
+                    client_socket, client_address = self.server_socket.accept()
+                    threading.Thread(
+                        target=self.open_connection,
+                        args=(client_socket, client_address),
+                        daemon=True,
+                    ).start()
+            except OSError:
+                break
 
     def open_connection(self, client_socket, client_address):
         """Open a socket connection to a given client. Active on separate thread from main server execution."""
